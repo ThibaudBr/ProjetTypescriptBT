@@ -1,74 +1,50 @@
+import {ISkill, Skill} from "./Skill.model";
+
 interface IPokemon{
     name: string;
     hp: number;
     attack: number;
     defense: number;
     speed: number;
-
+    skillTab: Array<ISkill>;
 }
 
 export class PokemonModel implements IPokemon{
-    private _name: string;
-    private _attack: number;
-    private _defense: number;
-    private _hp: number;
-    private _speed: number;
+    get skillTab(): Array<Skill>{
+        return this._skillTab;
+    }
+
+    set skillTab(value: Array<Skill>) {
+        this._skillTab = value;
+    }
+    name: string;
+    attack: number;
+    defense: number;
+    hp: number;
+    speed: number;
+    private _skillTab: Array<Skill>;
 
     constructor(props: IPokemon) {
-        this._name = props.name;
-        this._attack = props.attack;
-        this._defense = props.defense;
-        this._hp = props.hp;
-        this._speed = props.speed;
+        this.name = props.name;
+        this.attack = props.attack;
+        this.defense = props.defense;
+        this.hp = props.hp;
+        this.speed = props.speed;
+        this._skillTab = props.skillTab;
     }
 
-    get attack(): number {
-        return this._attack;
-    }
-
-    set attack(value: number) {
-        this._attack = value;
-    }
-
-    get defense(): number {
-        return this._defense;
-    }
-
-    set defense(value: number) {
-        this._defense = value;
-    }
-
-    get hp(): number {
-        return this._hp;
-    }
-
-    set hp(value: number) {
-        this._hp = value;
-    }
-
-    get speed(): number {
-        return this._speed;
-    }
-
-    set speed(value: number) {
-        this._speed = value;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
-    }
-
-    attackEnnemie(power: number, pokemon_2: PokemonModel){
-        if (pokemon_2.hp > power){
-            pokemon_2.hp = pokemon_2.hp - power;
+    attackEnnemie(skill: Skill, pokemon_2: PokemonModel){
+        let attackPower = this.attack/10 * skill.power;
+        let damageDeal = attackPower - pokemon_2.defense/2;
+        if (pokemon_2.hp > damageDeal){
+            pokemon_2.hp = pokemon_2.hp - damageDeal;
         }else{
             pokemon_2.hp = 0;
         }
+    }
 
+    chooseSkill(): number{
+        return Math.floor(Math.random() * this.skillTab.length);
     }
 }
 
